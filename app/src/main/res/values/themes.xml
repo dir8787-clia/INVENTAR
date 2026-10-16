@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Базовая тема для Activity (до рендера Compose). Не содержит ActionBar. -->
+    <style name="Theme.Inventory" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">#1B5E20</item>
+    </style>
+</resources>

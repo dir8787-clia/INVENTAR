@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Инвентаризация</string>
+
+    <!-- Нижняя навигация -->
+    <string name="nav_scanner">Сканер</string>
+    <string name="nav_list">Список</string>
+    <string name="nav_report">Отчёт</string>
+    <string name="nav_settings">Настройки</string>
+
+    <!-- Экран сканирования -->
+    <string name="scanner_found_count">Найдено %1$d из %2$d единиц</string>
+    <string name="manual_input_hint">Введите инв. номер вручную</string>
+    <string name="recent_scans">Последние сканирования</string>
+    <string name="no_scans_yet">Сканирований пока нет. Отсканируйте QR-код или введите номер вручную.</string>
+    <string name="camera_permission_denied">Нет доступа к камере. Разрешите доступ в настройках приложения или используйте ручной ввод номера.</string>
+    <string name="overage_dialog_text">Лимит достигнут (%1$d из %2$d). Позиция: %3$s. Добавить как ИЗЛИШЕК?</string>
+    <string name="action_add_overage">Да, добавить</string>
+    <string name="action_cancel">Отмена</string>
+
+    <!-- Список позиций -->
+    <string name="search_hint">Поиск по номеру или названию</string>
+    <string name="empty_db_hint">База пуста. Сначала импортируйте список оборудования из Excel (экран «Настройки»).</string>
+    <string name="empty_filter_hint">Ничего не найдено по выбранному фильтру.</string>
+    <string name="item_status_line">Найдено %1$d из %2$d %3$s · %4$s</string>
+    <string name="status_found">Найдено</string>
+    <string name="status_partial">Частично</string>
+    <string name="status_missing">Пропало</string>
+    <string name="status_overage">Излишек</string>
+    <string name="status_found_overage">Найдено + излишек</string>
+
+    <!-- Отчёт -->
+    <string name="stat_total_units">Всего единиц</string>
+    <string name="stat_found">Найдено</string>
+    <string name="stat_missing">Пропало</string>
+    <string name="stat_partial">Частично</string>
+    <string name="stat_overage">Излишки</string>
+    <string name="progress_caption">Прогресс: %1$d из %2$d единиц</string>
+    <string name="export_xlsx">Экспорт XLSX</string>
+    <string name="export_csv">Экспорт CSV</string>
+    <string name="scan_log_title">Журнал сканирований</string>
+    <string name="log_type_normal">Учёт</string>
+    <string name="log_type_overage">Излишек</string>
+    <string name="log_source_camera">Камера</string>
+    <string name="log_source_manual">Ручной</string>
+
+    <!-- Настройки -->
+    <string name="section_excel">Импорт Excel</string>
+    <string name="import_excel">Загрузить список из Excel</string>
+    <string name="import_excel_hint">Формат .xlsx/.xls. Колонки: A — наименование, B — инв. номер, C — ед. изм., D — количество. Первая строка-заголовок пропускается.</string>
+    <string name="confirm_replace_title">Заменить базу?</string>
+    <string name="confirm_replace_text">Импортированный список заменит текущую базу, а все сохранённые сканирования будут удалены. Продолжить?</string>
+    <string name="action_yes_replace">Да, заменить</string>
+
+    <string name="section_labels">Печать этикеток</string>
+    <string name="labels_preview">Предпросмотр</string>
+    <string name="labels_print">Печать</string>
+    <string name="labels_save_pdf">Сохранить PDF</string>
+    <string name="labels_lomond_hint">Бумага Lomond 2100195: этикетка 48.5 × 25.4 мм, лист A4, 4 × 10 = 40 этикеток. Количество этикеток позиции равно её количеству в базе.</string>
+
+    <string name="section_backup">Резервные копии</string>
+    <string name="backup_export">Экспорт JSON</string>
+    <string name="backup_import">Импорт JSON</string>
+    <string name="backup_import_mode_title">Режим импорта</string>
+    <string name="backup_import_mode_text">«Заменить всё» полностью перезапишет базу и сканы из файла. «Объединить сканы» добавит только сканирования без дублей (по номеру и времени).</string>
+    <string name="backup_mode_replace">Заменить всё</string>
+    <string name="backup_mode_merge">Объединить сканы</string>
+
+    <string name="section_danger">Опасные операции</string>
+    <string name="clear_scans">Очистить журнал сканирований</string>
+    <string name="confirm_clear_title">Очистить журнал?</string>
+    <string name="confirm_clear_text">Все сохранённые сканирования будут удалены без возможности восстановления. Продолжить?</string>
+    <string name="action_yes">Да</string>
+</resources>
