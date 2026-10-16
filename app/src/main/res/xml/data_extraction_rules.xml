@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Приложение полностью офлайн: в облачные бэкапы не отправляем ничего,
+     локальный автобэкап разрешён только для настроек (БД переносится через JSON-экспорт). -->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" path="." />
+        <exclude domain="external" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="external" />
+    </device-transfer>
+</data-extraction-rules>

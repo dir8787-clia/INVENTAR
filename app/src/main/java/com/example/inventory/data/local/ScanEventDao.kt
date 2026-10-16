@@ -40,11 +40,11 @@ interface ScanEventDao {
         SELECT invNumber || '|' || timestamp FROM scan_events
         """
     )
-    suspend fun existingKeys(): Set<String>
+    suspend fun existingKeys(): List<String>
 
     @Transaction
     suspend fun mergeEvents(events: List<ScanEvent>): Int {
-        val existing = existingKeys()
+        val existing = existingKeys().toSet()
         val toInsert = events.filter { "${it.invNumber}|${it.timestamp}" !in existing }
         if (toInsert.isNotEmpty()) insertAll(toInsert)
         return toInsert.size
