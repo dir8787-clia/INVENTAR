@@ -12,13 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -30,9 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -56,7 +51,7 @@ object BackupImportHolder {
 
 /**
  * Экран «Настройки»: импорт Excel (с подтверждением замены базы), печать этикеток,
- * бэкапы JSON, пароль, очистка журнала. Все файловые операции — через SAF.
+ * бэкапы JSON, очистка журнала. Все файловые операции — через SAF.
  */
 @Composable
 fun SettingsScreen(vm: SettingsViewModel = viewModel()) {
@@ -104,7 +99,6 @@ fun SettingsScreen(vm: SettingsViewModel = viewModel()) {
     ) { uri -> if (uri != null) BackupImportHolder.pending.value = uri }
 
     // Журнал сканов для экспорта передаётся извне через ReportExportHolder
-    var showPasswordDialog by remember { mutableStateOf<String?>(null) } // "set","change","disable"
     var confirmClearScans by remember { mutableStateOf(false) }
 
     Column(
@@ -158,26 +152,6 @@ fun SettingsScreen(vm: SettingsViewModel = viewModel()) {
             Button(onClick = { jsonPicker.launch(arrayOf("application/json", "*/*")) },
                 modifier = Modifier.height(48.dp)) {
                 Text(stringResource(R.string.backup_import))
-            }
-        }
-
-        Spacer(Modifier.height(6.dp))
-        Text(stringResource(R.string.section_password), style = MaterialTheme.typography.titleMedium)
-        if (state.hasPassword) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedButton(onClick = { showPasswordDialog = "change" },
-                    modifier = Modifier.height(48.dp)) {
-                    Text(stringResource(R.string.password_change))
-                }
-                OutlinedButton(onClick = { showPasswordDialog = "disable" },
-                    modifier = Modifier.height(48.dp)) {
-                    Text(stringResource(R.string.password_disable))
-                }
-            }
-        } else {
-            Button(onClick = { showPasswordDialog = "set" },
-                modifier = Modifier.fillMaxWidth().height(48.dp)) {
-                Text(stringResource(R.string.password_set))
             }
         }
 
@@ -252,30 +226,6 @@ fun SettingsScreen(vm: SettingsViewModel = viewModel()) {
         )
     }
 
-    // Диалоги пароля
-    when (showPasswordDialog) {
-        "set" -> PasswordDialog(
-            title = stringResource(R.string.password_set),
-            askOld = false,
-            onDismiss = { showPasswordDialog = null },
-            onSubmit = { _, npw ->
-                if (vm.setPassword(npw)) showPasswordDialog = null
-            }
-        )
-        "change" -> PasswordDialog(
-            title = stringResource(R.string.password_change),
-            askOld = true,
-            onDismiss = { showPasswordDialog = null },
-            onSubmit = { opw, npw ->
-                if (vm.changePassword(opw, npw)) showPasswordDialog = null
-            }
-        )
-        "disable" -> DisablePasswordDialog(
-            onDismiss = { showPasswordDialog = null },
-            onConfirm = { pw -> if (vm.disablePassword(pw)) showPasswordDialog = null }
-        )
-    }
-
     snackbar?.let { msg ->
         AlertDialog(
             onDismissRequest = { snackbar = null },
@@ -297,76 +247,3 @@ private fun Card(loaded: Int, skipped: Int, reasons: List<String>) {
     }
 }
 
-@Composable
-private fun PasswordDialog(
-    title: String,
-    askOld: Boolean,
-    onDismiss: () -> Unit,
-    onSubmit: (String, String) -> Unit
-) {
-    var oldPw by remember { mutableStateOf("") }
-    var newPw by remember { mutableStateOf("") }
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(title) },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                if (askOld) {
-                    OutlinedTextField(
-                        value = oldPw, onValueChange = { oldPw = it },
-                        label = { Text(stringResource(R.string.password_current)) },
-                        visualTransformation = PasswordVisualTransformation(),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        textStyle = androidx.compose.ui.text.TextStyle(fontSize = 16.sp)
-                    )
-                }
-                OutlinedTextField(
-                    value = newPw, onValueChange = { newPw = it },
-                    label = { Text(stringResource(R.string.password_new)) },
-                    visualTransformation = PasswordVisualTransformation(),
-                    singleLine = true,
-                    imeAction = ImeAction.Done,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
-                    textStyle = androidx.compose.ui.text.TextStyle(fontSize = 16.sp)
-                )
-                Text(stringResource(R.string.password_rule), fontSize = 12.sp)
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { onSubmit(oldPw, newPw) }) {
-                Text(stringResource(R.string.action_save))
-            }
-        },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } }
-    )
-}
-
-@Composable
-private fun DisablePasswordDialog(onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
-    var pw by remember { mutableStateOf("") }
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.password_disable_confirm_title)) },
-        text = {
-            Column {
-                Text(stringResource(R.string.password_disable_confirm_text), fontSize = 14.sp)
-                Spacer(Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = pw, onValueChange = { pw = it },
-                    label = { Text(stringResource(R.string.password_enter)) },
-                    visualTransformation = PasswordVisualTransformation(),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    textStyle = androidx.compose.ui.text.TextStyle(fontSize = 16.sp)
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { onConfirm(pw) }) {
-                Text(stringResource(R.string.action_disable))
-            }
-        },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } }
-    )
-}

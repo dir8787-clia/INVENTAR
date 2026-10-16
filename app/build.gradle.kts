@@ -79,14 +79,10 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.2.5")
     implementation("com.fasterxml.jackson.core:jackson-core:2.15.2")
 
-    // EncryptedSharedPreferences for password hash storage
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
-
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
-    // JSON (backup) - org.json is in Android; kotlinx for convenience not required
-    implementation("androidx.preference:preference-ktx:1.2.1")
+    // JSON (backup) - org.json is provided by the Android framework
 
     debugImplementation("androidx.compose.ui:ui-tooling")
 }

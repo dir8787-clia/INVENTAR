@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.inventory.data.repository.InventoryRepository
 import com.example.inventory.util.ImportResult
-import com.example.inventory.util.PasswordHasher
 import com.example.inventory.util.PdfLabelPrinter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +15,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 data class SettingsUiState(
-    val hasPassword: Boolean = false,
     val message: String? = null,
     val busy: Boolean = false,
     val importResult: ImportResult? = null,
@@ -30,14 +28,6 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
 
     private val _state = MutableStateFlow(SettingsUiState())
     val state: StateFlow<SettingsUiState> = _state.asStateFlow()
-
-    init {
-        refreshPasswordState()
-    }
-
-    fun refreshPasswordState() {
-        _state.value = _state.value.copy(hasPassword = PasswordHasher.hasPassword(ctx))
-    }
 
     fun consumeMessage() {
         _state.value = _state.value.copy(message = null, importResult = null, labelPreviewInfo = null)
@@ -141,38 +131,6 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
                 _state.value = _state.value.copy(busy = false, message = "Ошибка: ${e.message}")
             }
         }
-    }
-
-    // ---------- Пароль ----------
-
-    fun setPassword(password: String): Boolean {
-        if (!PasswordHasher.isValidPassword(password)) {
-            _state.value = _state.value.copy(message = "Пароль должен быть 4–20 символов")
-            return false
-        }
-        PasswordHasher.setPassword(ctx, password)
-        refreshPasswordState()
-        _state.value = _state.value.copy(message = "Пароль установлен")
-        return true
-    }
-
-    fun changePassword(old: String, new: String): Boolean {
-        if (!PasswordHasher.checkPassword(ctx, old)) {
-            _state.value = _state.value.copy(message = "Текущий пароль неверен")
-            return false
-        }
-        return setPassword(new)
-    }
-
-    fun disablePassword(password: String): Boolean {
-        if (!PasswordHasher.checkPassword(ctx, password)) {
-            _state.value = _state.value.copy(message = "Пароль неверен")
-            return false
-        }
-        PasswordHasher.clearPassword(ctx)
-        refreshPasswordState()
-        _state.value = _state.value.copy(message = "Пароль отключён")
-        return true
     }
 
     // ---------- Очистка ----------
