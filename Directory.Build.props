@@ -1,0 +1,22 @@
+<Project>
+  <!--
+    Общие свойства сборки для всех проектов решения WizTalk.
+    Целевая платформа — net8.0 (C# 12). Windows-специфичные проекты
+    (WPF-клиент) переопределяют TFM на net8.0-windows в своих csproj.
+  -->
+  <PropertyGroup>
+    <LangVersion>12.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>CA1416;CS8618</WarningsNotAsErrors>
+    <NoWarn>$(NoWarn);CA1416;NU1701</NoWarn>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <Deterministic>true</Deterministic>
+    <Company>WizTalk Project</Company>
+    <Product>WizTalk</Product>
+    <Version>1.0.0</Version>
+    <SatelliteResourceLanguages>ru;en</SatelliteResourceLanguages>
+  </PropertyGroup>
+</Project>
